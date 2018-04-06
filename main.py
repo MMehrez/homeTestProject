@@ -4,9 +4,6 @@ Created on Tue Apr 03 19:09:37 2018
 @author: Mohamed W. Mehrez Said
 email: m.mehrez.said@mun.ca
 """
-import time
-import requests
-
 import urllib.request, urllib.parse, urllib.error
 import json, time
 
@@ -23,7 +20,7 @@ if __name__ == '__main__':
     requested_addresses = requested_addresses.split(";")
 
     url_google = 'https://maps.googleapis.com/maps/api/geocode/json?'
-    url_here = 'https://geocoder.cit.api.here.com/6.2/geocode.json'
+    url_here = 'https://geocoder.cit.api.here.com/6.2/geocode.json?'
 
     i = 0;
     while i < len(requested_addresses):
@@ -40,7 +37,6 @@ def geocodingGoogle(index,url):
     try:
         response = urllib.request.urlopen(req_url)
         data = response.read().decode()
-        #print('Retrieved', len(data), 'characters')
         results = json.loads(data)
         location = results['results'][0]['geometry']['location']
     except:
@@ -48,13 +44,14 @@ def geocodingGoogle(index,url):
     return location
 
 def geocodingHere(index,url):
+    params = {'searchtext': requested_addresses[index],'app_id':'ZuuaESOoZ3r0TfUpSNLN','app_code':'cNeC1goF-_A2H5Zbth4vmQ'}
+    req_url = url + urllib.parse.urlencode(params)
     try:
-        params = {'searchtext': requested_addresses[index],'app_id':'ZuuaESOoZ3r0TfUpSNLN','app_code':'cNeC1goF-_A2H5Zbth4vmQ'}
-        r = requests.get(url, params=params)
-        results = r.json()
+        response = urllib.request.urlopen(req_url)
+        data = response.read().decode()
+        results = json.loads(data)
         location = results['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']        
         location = {'lat': location['Latitude'], 'lng': location['Longitude']}
-        return location
-    except:        
+    except:
         location = {'lat': 'Error', 'lng': 'Error'}
-        return location            
+    return location    
