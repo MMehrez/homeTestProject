@@ -4,7 +4,7 @@ Created on Tue Apr 03 19:09:37 2018
 @author: Mohamed W. Mehrez Said
 email: m.mehrez.said@mun.ca
 """
-import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.parse
 import json, time
 
 if __name__ == '__main__':
@@ -27,7 +27,6 @@ if __name__ == '__main__':
         location = geocodingGoogle(i,url_google)
         if location == 'Error':
             location = geocodingHere(i,url_here)
-            print ('google error')
         print ("The coordinates of",requested_addresses[i],"are: latitude:",location['lat'],"and longitude:",location['lng'])
         i+=1
 
