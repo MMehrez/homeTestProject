@@ -54,6 +54,6 @@ if __name__ == '__main__':
         location = geocodingGoogle(i,url_google)
         if location == 'Error':
             location = geocodingHere(i,url_here)
-        print ("The coordinates of",requested_addresses[i],"are: latitude:",\
-               location['lat'],"and longitude:",location['lng'])
+        print ("The coordinates of",requested_addresses[i],"are: (latitude:",\
+               location['lat'],")","and (longitude:",location['lng'],")")
         i+=1
