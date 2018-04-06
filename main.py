@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on Tue Apr 03 19:09:37 2018
 @author: Mohamed W. Mehrez Said
@@ -5,6 +6,9 @@ email: m.mehrez.said@mun.ca
 """
 import time
 import requests
+
+import urllib.request, urllib.parse, urllib.error
+import json, time
 
 if __name__ == '__main__':
     # welcome and information message
@@ -18,7 +22,7 @@ if __name__ == '__main__':
     requested_addresses = input('Enter the Address(es) separated by a (;)')
     requested_addresses = requested_addresses.split(";")
 
-    url_google = 'https://maps.googleapis.com/maps/api/geocode/json'
+    url_google = 'https://maps.googleapis.com/maps/api/geocode/json?'
     url_here = 'https://geocoder.cit.api.here.com/6.2/geocode.json'
 
     i = 0;
@@ -26,19 +30,22 @@ if __name__ == '__main__':
         location = geocodingGoogle(i,url_google)
         if location == 'Error':
             location = geocodingHere(i,url_here)
+            print ('google error')
         print ("The coordinates of",requested_addresses[i],"are: latitude:",location['lat'],"and longitude:",location['lng'])
         i+=1
 
 def geocodingGoogle(index,url):
+    params = {'address': requested_addresses[index]}
+    req_url = url + urllib.parse.urlencode(params)
     try:
-        params = {'address': requested_addresses[index]}
-        r = requests.get(url, params=params)
-        results = r.json()
+        response = urllib.request.urlopen(req_url)
+        data = response.read().decode()
+        #print('Retrieved', len(data), 'characters')
+        results = json.loads(data)
         location = results['results'][0]['geometry']['location']
-        return location
-    except:        
+    except:
         location = 'Error'
-        return location
+    return location
 
 def geocodingHere(index,url):
     try:
